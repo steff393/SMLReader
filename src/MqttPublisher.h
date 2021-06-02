@@ -98,6 +98,26 @@ public:
             value = value * pow(10, scaler);
             sprintf(buffer, "%.*f", prec, value);
             publish(entryTopic + "value", buffer);
+
+            // Adaptation for openWB and EFR-SGM-C4
+            // OBIS ID is usually 3 items long, e.g. 1.8.0 or 2.8.0
+            // The infos needed by openWB, which are sent by the counter are unique in the first id. Therefore it's sufficient to only check the first id.
+            String openWbTopic = "openWB/set/evu/"; 
+            switch (entry->obj_name->str[2]) {
+              case 16: /*.7.0*/ publish(openWbTopic + "W",          buffer); break;
+              case 31: /*.7.0*/ publish(openWbTopic + "APhase1",    buffer); break;
+              case 51: /*.7.0*/ publish(openWbTopic + "APhase2",    buffer); break;
+              case 71: /*.7.0*/ publish(openWbTopic + "APhase3",    buffer); break;
+              case  1: /*.8.0*/ publish(openWbTopic + "WhImported", buffer); break;
+              case  2: /*.8.0*/ publish(openWbTopic + "WhExported", buffer); break;
+              case 32: /*.7.0*/ publish(openWbTopic + "VPhase1",    buffer); break;
+              case 52: /*.7.0*/ publish(openWbTopic + "VPhase2",    buffer); break;
+              case 72: /*.7.0*/ publish(openWbTopic + "VPhase3",    buffer); break;
+              case 14: /*.7.0*/ publish(openWbTopic + "HzFrequenz", buffer); break;
+              default: ; // do nothing, not relevant for openWB
+            }
+            // ------- end of openWB -----------
+
           }
           else if (!sensor->config->numeric_only)
           {
