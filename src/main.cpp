@@ -98,6 +98,11 @@ void setup()
 	}
 
 	server.on("/", [] { iotWebConf.handleConfig(); });
+	//////////////////////////
+	server.on("/json", [] { 
+		server.send(200, "text/plain", "{\"watt\":" + myWatt + "}");  
+	});
+	//////////////////////////
 	server.onNotFound([]() { iotWebConf.handleNotFound(); });
 
 	DEBUG("Setup done.");

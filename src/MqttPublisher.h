@@ -9,6 +9,10 @@
 #include <sml/sml_file.h>
 #include <Ticker.h>
 
+/////////////////////////////
+#include <Arduino.h>
+String myWatt;
+/////////////////////////////
 #define MQTT_RECONNECT_DELAY 5
 #define MQTT_LWT_TOPIC "LWT"
 #define MQTT_LWT_RETAIN true
@@ -104,7 +108,7 @@ public:
             // The infos needed by openWB, which are sent by the counter are unique in the first id. Therefore it's sufficient to only check the first id.
             String openWbTopic = "openWB/set/evu/"; 
             switch (entry->obj_name->str[2]) {
-              case 16: /*.7.0*/ publish(openWbTopic + "W",          buffer); break;
+              case 16: /*.7.0*/ publish(openWbTopic + "W",          buffer); myWatt = buffer; break;
               case 31: /*.7.0*/ publish(openWbTopic + "APhase1",    buffer); break;
               case 51: /*.7.0*/ publish(openWbTopic + "APhase2",    buffer); break;
               case 71: /*.7.0*/ publish(openWbTopic + "APhase3",    buffer); break;
